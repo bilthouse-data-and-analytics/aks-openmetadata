@@ -4,7 +4,7 @@ metadata:
   name: open-metadata-lb
   namespace: openmetadata
   annotations: 
-    service.beta.kubernetes.io/azure-load-balancer-ipv4: <ipv4-address-from-loadbalancer-in-resource-group>
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: <ipaddresstoexposeservice>
 spec:
   selector:
     app.kubernetes.io/instance: openmetadata
