@@ -98,8 +98,41 @@ openmetadata-dependencies-web-9f6b4ff-5hfqj                1/1     Running   0  
 opensearch-0                                               1/1     Running   0          42m
 
 ```
+### Step 7 - Enable Azure Gateway Ingress Controller
+For prodcution deployment using ingress traffic through a domain name, we need to set up an ingress controller. Under the ``Application Gateway ingress controller -> Networking`` settings of the Azure Kubernetes cluster, select `Enable ingress controller `  and choose to create a new Application gateway.
 
-### Step 7 - Install Openmetadata
+### Step 8 - Install cert-manager
+To create a production ready certificate, we set up a clusterissuer through cert-manager, which is easily installed using Helm
+``` 
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm upgrade cert-manager jetstack/cert-manager \
+    --install \
+    --create-namespace \
+    --wait \
+    --namespace cert-manager \
+    --set installCRDs=true
+```
+cert-manager installs in its own namespace `cert-manager`, and its three deployments, services and pods can be verified by issuing the following command:
+ 
+```azure-cli
+ kubectl -n cert-manager get all
+```
+### Step 9 - Set up ClusterIssuer
+Next we set up a namespace agnostic ClusterIssuer to issue certificates within the AKS cluster.
+
+``` azure-cli
+kubectl apply -f openmetadata_cert_issuer_production.yaml 
+```
+It can take upto a minute for the Issuer to be up and running. The staging yaml can be used for testing purposes without exhausting the production quotas.
+
+``` azure-cli
+ kubectl get clusterissuer 
+NAME                  READY   AGE
+letsencrypt-prod      True    153m
+```
+
+### Step 10 - Install Openmetadata
 Finally install Openmetadata and customizing the apiEndpoints using the `values.yaml` file and set sensitive information like host address, db name and username through the CLI to avoid pushing the information into the repository.
 ```azure-cli
 helm install openmetadata open-metadata/openmetadata    \
@@ -110,12 +143,17 @@ helm install openmetadata open-metadata/openmetadata    \
                             --set openmetadata.config.database.auth.username=<MyDBUser> \
                                                        
  ```
-### Step 8 - Launch Openmetadata UI
 
+### Step 10 - Launch Openmetadata UI
+Visit the UI by opening your web browser and navigating to https://metadata.your-domain.com
+The UI can also be port-forwarded from the service cluster using:
 ```azure-cli
 kubectl port-forward service/openmetadata 8585:http -n openmetadata
 ```
-#### Expose UI 
+
+#### Expose UI through loadbalancer (optional alternative)
+If the ingress in the above steps 7 to 10 do not work, the UI service can be exposed to a loadbalancer, after suitably modifying the values.yaml file.
+
 Alternatively use the `openmetadata_lb.yaml` manifest to expose port 8585 of openmetadata web service to a public IP and port of your choice
 ```azure-cli
 kubectl apply -f openmetadata_lb.yaml
@@ -124,6 +162,7 @@ Open your browser and go to the specified IP(if exposing UI)/localhost to port 8
 
 ### References
 1. https://medium.com/syntio/deploying-openmetadata-on-azure-kubernetes-service-270a736679eb
-2. https://docs.open-metadata.org/v1.2.x/deployment/kubernetes/eks
-3. https://github.com/open-metadata/openmetadata-helm-charts/blob/main/charts/deps/values.yaml
-4. https://github.com/airflow-helm/charts/blob/main/charts/airflow/values.yaml
+2. openmetadata docs, https://docs.open-metadata.org/v1.2.x/deployment/kubernetes/eks
+3. openmetadata dependencies helm chart, https://github.com/open-metadata/openmetadata-helm-charts/blob/main/charts/deps/values.yaml
+4. openmetadata helm chart, https://github.com/airflow-helm/charts/blob/main/charts/airflow/values.yaml
+5. Cert-manager https://cert-manager.io/docs/tutorials/getting-started-aks-letsencrypt/
