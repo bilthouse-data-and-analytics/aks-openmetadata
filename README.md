@@ -15,7 +15,10 @@ az aks create   --resource-group  MyResourceGroup    \
     	        --kubernetes-version 1.25.15         \
 		        --node-count 1                       \
 		        --enable-addons monitoring           \
-		        --aks-custom-headers EnableAzureDiskFileCSIDriver=true
+		        --aks-custom-headers EnableAzureDiskFileCSIDriver=true  \
+                # experimental
+                --network-plugin azure \  
+                --enable-managed-identity 
 ```
 For existing cluster it is important to enable the CSI storage drivers
 ```azure-cli
@@ -65,13 +68,13 @@ kubectl create secret generic postgresql-secret                                 
 The values-dependencies-yaml is used to overwride default values in the official helm chart and must be configured for customizing for use cases. Uncomment the externalDatabase section with meaningful values to connect to external database for production deployments. We set sensitive information like host address, DB name and DB username through the CLI
 
 ```azure-cli
-helm install openmetadata-dependencies open-metadata/openmetadata-dependencies  
+helm install openmetadata-dependencies open-metadata/openmetadata-dependencies  \
                             --values values-dependencies.yaml                           \
                             --namespace openmetadata                                    \
                             --set mysql.enabled=false                                   \
                             --set airflow.externalDatabase.host=<MyDBHostAddress>       \
                             --set airflow.externalDatabase.user=<MyDBUser>              \
-                            --set airflow.externalDatabase.database=<MyDBUser>          
+                            --set airflow.externalDatabase.database=<airflow_metastore>          
 
 ```
 
@@ -105,7 +108,7 @@ helm install openmetadata open-metadata/openmetadata    \
                             --values values.yaml        \
                             --namespace openmetadata    \
                             --set openmetadata.config.database.host=<MyDBHostAddress>   \
-                            --set openmetadata.config.database.databaseName=<MyDBName>  \
+                            --set openmetadata.config.database.databaseName=openmetadata_db  \
                             --set openmetadata.config.database.auth.username=<MyDBUser> \
                                                        
  ```

@@ -127,6 +127,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+secrets
+.secrets
+
 
 # Spyder project settings
 .spyderproject
@@ -139,6 +142,7 @@ venv.bak/
 /site
 /secrets
 /docker-volume
+
 
 # mypy
 .mypy_cache/

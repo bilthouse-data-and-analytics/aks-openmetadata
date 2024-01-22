@@ -1,7 +1,7 @@
 global:
   pipelineServiceClientConfig:
-    apiEndpoint: http://openmetadata-dependencies-web..svc.cluster.local:8080
-    metadataApiEndpoint: http://openmetadata..svc.cluster.local:8585/apii
+    apiEndpoint: http://openmetadata-dependencies-web.openmetadata.svc.cluster.local:8080
+    metadataApiEndpoint: http://openmetadata.openmetadata.svc.cluster.local:8585/api
 
 openmetadata:
   config:
@@ -16,3 +16,22 @@ openmetadata:
         password:
           secretRef: postgresql-secret
           secretKey: postgresql-password
+
+    authentication:
+      enableSelfSignup: false   # dont allow users to signup from home page
+
+ingress:
+  enabled: true
+  className: "azure-application-gateway"
+  annotations: 
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: metadata.studiwelt.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  
+  tls:
+    - secretName: tls-open-metadata
+      hosts:
+        - metadata.studiwelt.com
