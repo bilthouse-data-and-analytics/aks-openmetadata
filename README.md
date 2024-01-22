@@ -16,9 +16,7 @@ az aks create   --resource-group  MyResourceGroup    \
 		        --node-count 1                       \
 		        --enable-addons monitoring           \
 		        --aks-custom-headers EnableAzureDiskFileCSIDriver=true  \
-                # experimental
-                --network-plugin azure \  
-                --enable-managed-identity 
+          
 ```
 For existing cluster it is important to enable the CSI storage drivers
 ```azure-cli
