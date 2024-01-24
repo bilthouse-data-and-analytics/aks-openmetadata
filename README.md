@@ -144,7 +144,7 @@ helm install openmetadata open-metadata/openmetadata    \
  ```
 
 ### Step 10 - Launch Openmetadata UI
-Visit the UI by opening your web browser and navigating to https://metadata.your-domain.com
+Visit the UI by opening your web browser and navigating to [openmetadata](https://metadata.bilthouse-data.com)
 The UI can also be port-forwarded from the service cluster using:
 ```azure-cli
 kubectl port-forward service/openmetadata 8585:http -n openmetadata
