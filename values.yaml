@@ -1,3 +1,4 @@
+# using the values.yaml file to override the default values in the default helm chart
 global:
   pipelineServiceClientConfig:
     apiEndpoint: http://openmetadata-dependencies-web.openmetadata.svc.cluster.local:8080
@@ -6,11 +7,11 @@ global:
 openmetadata:
   config:
     database:
-      #host: 
+      #host: postgresql
       port: 5432
       driverClass: org.postgresql.Driver
       dbScheme: postgresql
-      #databaseName: 
+      databaseName: openmetadata_db
       auth:
         #username: 
         password:
@@ -20,13 +21,17 @@ openmetadata:
     authentication:
       enableSelfSignup: false   # dont allow users to signup from home page
 
+image:
+  tag: 1.2.4
+
 ingress:
   enabled: true
   className: "azure-application-gateway"
   annotations: 
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    appgw.ingress.kubernetes.io/ssl-redirect: "true" # redirects http traffic to https route
   hosts:
-    - host: metadata.studiwelt.com
+    - host: metadata.bilthouse-data.com
       paths:
         - path: /
           pathType: ImplementationSpecific
@@ -34,4 +39,5 @@ ingress:
   tls:
     - secretName: tls-open-metadata
       hosts:
-        - metadata.studiwelt.com
+        - metadata.bilthouse-data.com
+

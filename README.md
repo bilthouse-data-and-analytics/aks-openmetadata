@@ -139,7 +139,6 @@ helm install openmetadata open-metadata/openmetadata    \
                             --values values.yaml        \
                             --namespace openmetadata    \
                             --set openmetadata.config.database.host=<MyDBHostAddress>   \
-                            --set openmetadata.config.database.databaseName=openmetadata_db  \
                             --set openmetadata.config.database.auth.username=<MyDBUser> \
                                                        
  ```
