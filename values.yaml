@@ -3,7 +3,7 @@ global:
   pipelineServiceClientConfig:
     apiEndpoint: http://openmetadata-dependencies-web.openmetadata.svc.cluster.local:8080
     metadataApiEndpoint: http://openmetadata.openmetadata.svc.cluster.local:8585/api
-
+replicaCount: 2
 openmetadata:
   config:
     database:
@@ -37,7 +37,7 @@ ingress:
           pathType: ImplementationSpecific
   
   tls:
-    - secretName: tls-open-metadata
+    - secretName: openmetadata-tls
       hosts:
         - metadata.bilthouse-data.com
 
