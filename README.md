@@ -72,7 +72,7 @@ helm install openmetadata-dependencies open-metadata/openmetadata-dependencies  
                             --set mysql.enabled=false                                   \
                             --set airflow.externalDatabase.host=<MyDBHostAddress>       \
                             --set airflow.externalDatabase.user=<MyDBUser>              \
-                            --set airflow.externalDatabase.database=<airflow_metastore>          
+                                     
 
 ```
 
