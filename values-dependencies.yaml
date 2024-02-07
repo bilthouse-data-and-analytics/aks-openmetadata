@@ -14,6 +14,7 @@ airflow:
           claimName: openmetadata-dependencies-dags-pvc
     config:
       AIRFLOW__OPENMETADATA_AIRFLOW_APIS__DAG_GENERATED_CONFIGS: "/airflow-dags/dags"
+  
   dags:
     path: /airflow-dags/dags
     persistence:
@@ -31,3 +32,9 @@ airflow:
     dbUseSSL: true
     passwordSecret: postgresql-secret
     passwordSecretKey: postgresql-password
+  nodeSelector:
+    agentpool: usernodepool
+
+opensearch:
+  nodeSelector:
+    agentpool: usernodepool
