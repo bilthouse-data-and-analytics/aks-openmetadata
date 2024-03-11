@@ -22,6 +22,7 @@ airflow:
     path: /airflow-logs
     persistence:
       enabled: false
+
   externalDatabase:
     type: postgres
     # host: hostaddress
@@ -32,7 +33,7 @@ airflow:
     passwordSecret: postgresql-secret
     passwordSecretKey: postgresql-password
   nodeSelector:
-    agentpool: usernodepool
+    prodpool: activepool
 
 opensearch:
   enabled: true
@@ -59,4 +60,4 @@ opensearch:
       cpu: "2000m"
       memory: "2048M"
   nodeSelector:
-    agentpool: usernodepool
+    prodpool: activepool

@@ -1,6 +1,20 @@
 replicaCount: 2
 openmetadata:
   config:
+    smtpConfig:
+      enableSmtpServer: true
+      emailingEntity: "OpenMetadata"
+      supportUrl: "https://slack.open-metadata.org"
+      transportationStrategy: "SMTP_TLS"
+      openMetadataUrl: "https://metadata.bilthouse-data.com"
+      serverEndpoint: "smtp.office365.com"
+      serverPort: "587"
+      senderMail: 
+      username: 
+      password: 
+        secretRef: "smtp-secret"
+        secretKey: "password"
+
     database:
       #host: postgresql
       port: 5432
@@ -21,7 +35,7 @@ openmetadata:
 image:
   tag: 1.3.0
 nodeSelector:
-  agentpool: usernodepool
+  prodpool: activepool
 ingress:
   enabled: true
   className: "azure-application-gateway"

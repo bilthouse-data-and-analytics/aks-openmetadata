@@ -78,7 +78,7 @@ helm install openmetadata-dependencies open-metadata/openmetadata-dependencies  
 
 For subsequent revisions to the deployment update the yaml file and upgrade the deplyoment using
 ```azure-cli
-helm upgrade --install openmetadata-dependencies open-metadata/openmetadata-dependencies 
+helm upgrade openmetadata-dependencies open-metadata/openmetadata-dependencies 
                             --values values-dependencies.yaml 
                             --namespace openmetadata
 ```
@@ -135,6 +135,7 @@ letsencrypt-prod      True    153m
 ### Step 10 - Install Openmetadata
 Finally install Openmetadata and customizing the apiEndpoints using the `values.yaml` file and set sensitive information like host address, db name and username through the CLI to avoid pushing the information into the repository.
 ```azure-cli
+kubectl create secret generic smtp-secret --from-literal=password=<smtp-server-username-password> -n openmetadata
 helm install openmetadata open-metadata/openmetadata    \
                             --values values.yaml        \
                             --namespace openmetadata    \
