@@ -1,5 +1,9 @@
 airflow:
+  nodeSelector:
+    prodpool: activepool
   airflow:
+    image:
+      tag: 1.3.0
     extraVolumeMounts:
       - mountPath: /airflow-logs
         name: aks-airflow-logs
@@ -32,8 +36,8 @@ airflow:
     dbUseSSL: true
     passwordSecret: postgresql-secret
     passwordSecretKey: postgresql-password
-  nodeSelector:
-    prodpool: activepool
+    nodeSelector:
+      prodpool: activepool
 
 opensearch:
   enabled: true
