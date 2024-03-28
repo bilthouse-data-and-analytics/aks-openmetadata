@@ -1,6 +1,6 @@
 airflow:
   nodeSelector:
-    prodpool: activepool
+    metapool: activepool
   airflow:
     image:
       tag: 1.3.0
@@ -29,15 +29,15 @@ airflow:
 
   externalDatabase:
     type: postgres
-    # host: hostaddress
+    host: pg-dw-production.postgres.database.azure.com
     database: openmetadata_airflow_metastore
-    # user: dbusername
+    user: bilthouse
     port: 5432
     dbUseSSL: true
     passwordSecret: postgresql-secret
     passwordSecretKey: postgresql-password
     nodeSelector:
-      prodpool: activepool
+      metapool: activepool
 
 opensearch:
   enabled: true
@@ -64,4 +64,4 @@ opensearch:
       cpu: "2000m"
       memory: "2048M"
   nodeSelector:
-    prodpool: activepool
+    metapool: activepool

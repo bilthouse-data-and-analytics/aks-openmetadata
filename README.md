@@ -3,24 +3,38 @@
 The repository contains files to set-up Openmetadata on Azure Kubernetes Service cluster and fills the gap in official Openmetadata documentation that lacks set-up instruction for Azure cloud.
 
 
-### Step 1 - Create a AKS cluster
-This step is optional. Openmetadata can also be deployed to an existing AKS cluster.
+### Step 1 - Create a AKS cluster and  add a user nodepool
+This step is optional and not required unless you wish to create a new AKS cluster to deploy Openmetadata.
 ```azure-cli
-az aks create   --resource-group  MyResourceGroup    \
-                --name MyAKSClusterName              \
-                --nodepool-name agentpool            \
-                --outbound-type loadbalancer         \
-                --location germanywestcentral        \
-                --generate-ssh-keys                  \
-    	        --kubernetes-version 1.25.15         \
-		        --node-count 1                       \
-		        --enable-addons monitoring           \
-		        --aks-custom-headers EnableAzureDiskFileCSIDriver=true  \
+az aks create   --resource-group  MyResourceGroup  
+                --name MyAKSClusterName              
+                --nodepool-name agentpool            
+                --outbound-type loadbalancer         
+                --location germanywestcentral        
+                --generate-ssh-keys                  
+    	        --kubernetes-version 1.25.15         
+		        --node-count 1                       
+		        --enable-addons monitoring           
+		        --aks-custom-headers EnableAzureDiskFileCSIDriver=true
           
 ```
-For existing cluster it is important to enable the CSI storage drivers
+``` 
+az aks nodepool add --resource-group MyResourceGroup --cluster-name MyAKSClusterName --name metapool --node-count 1 --labels metapool=activepool --no-wait
+```
+For existing cluster it is important to enable the CSI storage drivers and add label metapool=activepool as this is used in the nodeselector for openmetadata pods. 
+
+First point kubectl to the correct context with the following command
+``` 
+kubectl config use-context MyAKSClusterName
+```
+Enable CSI storage ab´nd file drivers  
 ```azure-cli
-az aks update -n myAKSCluster -g myResourceGroup --enable-disk-driver --enable-file-driver
+az aks update -n MyAKSClusterName -g MyResourceGroup --enable-disk-driver --enable-file-driver
+```
+
+Add labels to the nodepool where Openmetadata will be deployed
+```
+az aks nodepool update --resource-group MyResourceGroup --cluster-name MyAKSClusterName --name metapool --labels metapool=activepool --no-wait
 ```
 
 ### Step 2 - Create a Namespace (optional)

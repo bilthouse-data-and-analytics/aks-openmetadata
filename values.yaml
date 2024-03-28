@@ -16,13 +16,13 @@ openmetadata:
         secretKey: "password"
 
     database:
-      #host: postgresql
+      host: pg-dw-production.postgres.database.azure.com
       port: 5432
       driverClass: org.postgresql.Driver
       dbScheme: postgresql
       databaseName: openmetadata_db
       auth:
-        #username: 
+        username: bilthouse
         password:
           secretRef: postgresql-secret
           secretKey: postgresql-password
@@ -35,7 +35,7 @@ openmetadata:
 image:
   tag: 1.3.0
 nodeSelector:
-  prodpool: activepool
+  metapool: activepool
 ingress:
   enabled: true
   className: "azure-application-gateway"
