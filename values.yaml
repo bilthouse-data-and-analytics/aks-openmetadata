@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 1
 openmetadata:
   config:
     smtpConfig:
@@ -36,6 +36,19 @@ image:
   tag: 1.3.0
 nodeSelector:
   metapool: activepool
+# commonLabels: 
+#   app: metadata
+# affinity:
+#   #do not co locate pods on same node
+#   podAntiAffinity:
+#     requiredDuringSchedulingIgnoredDuringExecution:
+#     - labelSelector:
+#         matchExpressions:
+#         - key: app
+#           operator: In
+#           values:
+#           - metadata
+#       topologyKey: "kubernetes.io/hostname"
 ingress:
   enabled: true
   className: "azure-application-gateway"
