@@ -1,4 +1,5 @@
-replicaCount: 1
+replicaCount: 2
+
 openmetadata:
   config:
     smtpConfig:
@@ -10,10 +11,27 @@ openmetadata:
       serverEndpoint: "smtp.office365.com"
       serverPort: "587"
       senderMail: 
-      username: 
+      username: dwh@bilthouse.com
       password: 
         secretRef: "smtp-secret"
         secretKey: "password"
+
+    authorizer:
+      className: "org.openmetadata.service.security.DefaultAuthorizer"
+      containerRequestFilter: "org.openmetadata.service.security.JwtFilter"
+      initialAdmins:
+        - "admin"
+        - "d.marimuthu@bilthouse.com"
+      principalDomain: "open-metadata.org"
+    authentication:
+      provider: "azure"
+      publicKeys:
+      - "https://metadata.bilthouse-data.com/api/v1/config/jwks" # Make sure this "/api/v1/config/jwks" is always configured to enable JWT tokens
+      - "https://login.microsoftonline.com/common/discovery/keys"
+      authority: "https://login.microsoftonline.com/{get-it-from-onepassword}"
+      clientId: "get-it-from-onepassword" # Azure Application
+      callbackUrl: "https://metadata.bilthouse-data.com//callback"
+      enableSelfSignup: false   # dont allow users to signup from home page
 
     database:
       host: pg-dw-production.postgres.database.azure.com
@@ -29,25 +47,21 @@ openmetadata:
     pipelineServiceClientConfig:
       apiEndpoint: http://openmetadata-dependencies-web.openmetadata.svc.cluster.local:8080
       metadataApiEndpoint: http://openmetadata.openmetadata.svc.cluster.local:8585/api
-    authentication:
-      enableSelfSignup: false   # dont allow users to signup from home page
-
+ 
 image:
   tag: 1.3.0
 nodeSelector:
   metapool: activepool
-# commonLabels: 
-#   app: metadata
 # affinity:
 #   #do not co locate pods on same node
 #   podAntiAffinity:
 #     requiredDuringSchedulingIgnoredDuringExecution:
 #     - labelSelector:
 #         matchExpressions:
-#         - key: app
+#         - key: app.kubernetes.io/name
 #           operator: In
 #           values:
-#           - metadata
+#           - openmetadata
 #       topologyKey: "kubernetes.io/hostname"
 ingress:
   enabled: true
