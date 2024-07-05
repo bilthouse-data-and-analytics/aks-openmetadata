@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 1
 
 openmetadata:
   config:
@@ -11,7 +11,7 @@ openmetadata:
       serverEndpoint: "smtp.office365.com"
       serverPort: "587"
       senderMail: 
-      username: dwh@bilthouse.com
+      username: "dwh@bilthouse.com"
       password: 
         secretRef: "smtp-secret"
         secretKey: "password"
@@ -21,24 +21,24 @@ openmetadata:
       containerRequestFilter: "org.openmetadata.service.security.JwtFilter"
       initialAdmins:
         - "admin"
-        - "d.marimuthu@bilthouse.com"
+        - "d.marimuthu"
       principalDomain: "open-metadata.org"
     authentication:
       provider: "azure"
       publicKeys:
-      - "https://metadata.bilthouse-data.com/api/v1/config/jwks" # Make sure this "/api/v1/config/jwks" is always configured to enable JWT tokens
+      - "https://metadata.bilthouse-data.com/api/v1/system/config/jwks" # Make sure this "/api/v1/config/jwks" is always configured to enable JWT tokens
       - "https://login.microsoftonline.com/common/discovery/keys"
-      authority: "https://login.microsoftonline.com/{get-it-from-onepassword}"
-      clientId: "get-it-from-onepassword" # Azure Application
-      callbackUrl: "https://metadata.bilthouse-data.com//callback"
-      enableSelfSignup: false   # dont allow users to signup from home page
+      authority: "https://login.microsoftonline.com/{tenant-id}" #" <---- enter-tenandt-id-from-onepassword"
+      clientId: "{client-id}" # <------Azure Application client id from one-password OMD K8 Secrets
+      callbackUrl: "https://metadata.bilthouse-data.com/callback"
+      enableSelfSignup: false   # allow users to signup from home page
 
     database:
       host: pg-dw-production.postgres.database.azure.com
       port: 5432
       driverClass: org.postgresql.Driver
       dbScheme: postgresql
-      databaseName: openmetadata_db
+      databaseName: omdb
       auth:
         username: bilthouse
         password:
@@ -49,7 +49,7 @@ openmetadata:
       metadataApiEndpoint: http://openmetadata.openmetadata.svc.cluster.local:8585/api
  
 image:
-  tag: 1.3.0
+  tag: 1.4.3
 nodeSelector:
   metapool: activepool
 # affinity:
