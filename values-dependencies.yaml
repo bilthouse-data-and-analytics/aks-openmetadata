@@ -1,9 +1,13 @@
+mysql:
+  enabled: false
+
 airflow:
   nodeSelector:
     metapool: activepool
   airflow:
     image:
-      tag: 1.4.3
+      repository: docker.getcollate.io/openmetadata/ingestion
+      tag: 1.5.13
     extraVolumeMounts:
       - mountPath: /airflow-logs
         name: aks-airflow-logs
@@ -22,10 +26,12 @@ airflow:
     path: /airflow-dags/dags
     persistence:
       enabled: false
+      accessMode: ReadWriteMany
   logs:
     path: /airflow-logs
     persistence:
       enabled: false
+      accessMode: ReadWriteMany
 
   externalDatabase:
     type: postgres
@@ -46,7 +52,7 @@ opensearch:
   nodeGroup: ""
   image:
     repository: opensearchproject/opensearch  # Specify the repository for OpenSearch
-    tag: 2.11.1  # Specify the desired version tag
+    tag: 2.18.0  # Specify the desired version tag
   imagePullPolicy: Always
   opensearchJavaOpts: "-Xmx1g -Xms1g"
   persistence:

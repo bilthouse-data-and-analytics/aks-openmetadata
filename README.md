@@ -152,10 +152,7 @@ Finally install Openmetadata and customizing the apiEndpoints using the `values.
 kubectl create secret generic smtp-secret --from-literal=password=<smtp-server-username-password> -n openmetadata
 helm install openmetadata open-metadata/openmetadata    \
                             --values values.yaml        \
-                            --namespace openmetadata    \
-                            --set openmetadata.config.database.host=<MyDBHostAddress>   \
-                            --set openmetadata.config.database.auth.username=<MyDBUser> \
-                                                       
+                            --namespace openmetadata    \                                                       
  ```
 
 ### Step 10 - Launch Openmetadata UI
